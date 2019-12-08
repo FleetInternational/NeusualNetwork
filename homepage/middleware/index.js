@@ -28,6 +28,36 @@ middlewareObj.checkNeusualnetworkOwnership = function(req,res,next){
     }
 };
 
+middlewareObj.checkNeusualnetworkOwnership_ajax = function(req,res,next){
+    if(req.isAuthenticated()){
+        Neusualnetwork.findById(req.params.id, function(err,foundNeusualnetwork){
+            if(err){
+                req.flash("error","Neusualnetwork not found");
+                // res.redirect("back");
+                res.status(401).send();
+            }else{
+                //does user own neusualnetwork
+                console.log(foundNeusualnetwork.author.id); // this id is mongoose object
+                console.log(req.user._id); // this is is string
+                var authorId = foundNeusualnetwork.author.id.toString();
+                var userId = req.user._id.toString();
+                //does user own the neusualnetwork
+                if(authorId === userId){
+                    next();
+                }else{
+                    req.flash("error","You dont have permission to do that");
+                    // res.redirect("back");
+                    res.status(401).send();
+                }
+            }
+        });
+    }else{
+        req.flash("error","You need to be loggedin to do that");
+        // res.redirect("back");
+        res.status(401).send();
+    }
+};
+
 middlewareObj.checkCommentOwnership = function(req,res,next){
     if(req.isAuthenticated()){
         Comment.findById(req.params.comment_id, function(err, foundComment){

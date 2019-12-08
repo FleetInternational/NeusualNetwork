@@ -61,7 +61,7 @@ app.use(function(req, res, next){     // used for showing signed in as and wheth
 app.use("/neusualhome", neusualnetworkRoutes);
 app.use("/neusualhome/:id/comments", commentRoutes);
 app.use("/", indexRoutes);
-app.use("/playground", playgroundRoutes)
+// app.use("/playground", playgroundRoutes)
 
 
 //app.listen(process.env.PORT,process.env.IP, function(){

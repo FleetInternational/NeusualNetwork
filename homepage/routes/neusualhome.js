@@ -21,7 +21,8 @@ router.post("/",middleware.isLoggedIn, function(req,res){
        id:req.user._id,
        username:req.user.username
    };
-   var newNeusualnetwork = {name:newneunet , price:price, image:image, description:description, author:author};
+   var weights = req.body.weights;
+   var newNeusualnetwork = {name:newneunet , price:price, image:image, description:description, author:author, weights: weights};
    //create new neusualnetwork and save to DB
    Neusualnetwork.create(newNeusualnetwork, function(err,newlyCreated){
        if(err){
@@ -36,9 +37,9 @@ router.post("/",middleware.isLoggedIn, function(req,res){
 router.get("/new", middleware.isLoggedIn, function(req, res) {
     res.render("neusualnetworks/new");
 });
-router.get("/test", middleware.isLoggedIn, function(req, res) {
-    res.render("/neusualhome");
-});
+// router.get("/test", middleware.isLoggedIn, function(req, res) {
+//     res.render("/neusualhome");
+// });
 //SHOW more info about one neusualnetwork
 router.get("/:id", function(req, res) {
     Neusualnetwork.findById(req.params.id).populate("comments").exec(function(err,showNeusualnetwork){
@@ -65,12 +66,37 @@ router.get("/:id/edit", middleware.checkNeusualnetworkOwnership, function(req, r
     //if not redirect
 });
 
+router.get("/:id/playground", middleware.checkNeusualnetworkOwnership, function(req, res) { // middleware is called before we go to route handler
+    Neusualnetwork.findById(req.params.id, function(err,foundNeusualnetwork){
+        if (err){
+            console.log(err);
+        } else {
+            res.render("playground/index",{ neusualnetwork: foundNeusualnetwork}); 
+        }
+    });
+});
+router.put("/:id/playground",middleware.checkNeusualnetworkOwnership_ajax, function(req, res) {
+    
+    //find and update the correct neusualnetwork
+    Neusualnetwork.findByIdAndUpdate(req.params.id, req.body.neusualnetwork, function(err, updatedNeusualnetwork) {
+        if(err){
+            console.log(err);
+            res.status(500).send();
+        }else{
+            // res.redirect("/neusualhome/" + req.params.id); // instead of req.params.id , can also be done updatedNeusualnetwork._id 
+            res.status(200).send(req.body.neusualnetwork);
+        }   
+    });
+    //redirect somewhere(show page)
+})
+
 //UPDATE Neusualnetwork route
 router.put("/:id",middleware.checkNeusualnetworkOwnership, function(req, res) {
     
     //find and update the correct neusualnetwork
     Neusualnetwork.findByIdAndUpdate(req.params.id, req.body.neusualnetwork, function(err, updatedNeusualnetwork) {
         if(err){
+            console.log(err);
             res.redirect("/neusualhome");
         }else{
             res.redirect("/neusualhome/" + req.params.id); // instead of req.params.id , can also be done updatedNeusualnetwork._id 

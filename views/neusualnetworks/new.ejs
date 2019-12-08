@@ -5,8 +5,8 @@
             Create new model
         </h1>
         <div style="width: 30%; margin: 25px auto;">
-<!--            <form action="/neusualhome" method="post">-->
-            <form action="/playground">
+           <form action="/neusualhome" method="post">
+            <!-- <form action="/playground"> -->
 
                 <div class="formgroup">
                     <input type="text" class="form-control" name="addnew" placeholder="Add new neusual network" width="50%"><br>
@@ -19,6 +19,9 @@
                 </div>
                  <div class="formgroup">
                     <input type="text" class="form-control" name="description" placeholder="description" width="50%"><br>
+                </div>
+                <div class="formgroup">
+                        <input type="hidden" class="form-control" name="weights" value="[]" width="50%"><br>
                 </div>
                 <div class="formgroup">
                     <button class="btn btn-lg btn-primary btn-block">Start Training</button><br>

@@ -19,7 +19,7 @@ var neusualnetworkSchema = new mongoose.Schema({
             ref:"Comment"
         }
     ],
-    weights: [Number],
+    weights: String,
 }); 
 
 var Neusualnetwork = mongoose.model("Neusualnetwork", neusualnetworkSchema);
