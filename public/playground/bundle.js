@@ -10318,6 +10318,7 @@ var Player = (function () {
     Player.prototype.pause = function () {
         this.timerIndex++;
         this.isPlaying = false;
+        window.weights = getOutputWeights(window.network);
         if (this.callback) {
             this.callback(this.isPlaying);
         }
@@ -11018,6 +11019,7 @@ function reset(onStartup) {
     var outputActivation = (state.problem === state_1.Problem.REGRESSION) ?
         nn.Activations.LINEAR : nn.Activations.TANH;
     network = nn.buildNetwork(shape, state.activation, outputActivation, state.regularization, constructInputIds(), state.initZero);
+    window.network = network;
     lossTrain = getLoss(network, trainData);
     lossTest = getLoss(network, testData);
     drawNetwork(network);

@@ -131,6 +131,7 @@ class Player {
   pause() {
     this.timerIndex++;
     this.isPlaying = false;
+    (window as any).weights = getOutputWeights((window as any).network);
     if (this.callback) {
       this.callback(this.isPlaying);
     }
@@ -966,6 +967,7 @@ function reset(onStartup=false) {
       nn.Activations.LINEAR : nn.Activations.TANH;
   network = nn.buildNetwork(shape, state.activation, outputActivation,
       state.regularization, constructInputIds(), state.initZero);
+  (window as any).network = network;
   lossTrain = getLoss(network, trainData);
   lossTest = getLoss(network, testData);
   drawNetwork(network);
