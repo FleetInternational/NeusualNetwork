@@ -36,11 +36,9 @@ limitations under the License.
 
   <meta name="author" content="Daniel Smilkov and Shan Carter">
   <title>A Neural Network Playground</title>
-  <link rel="stylesheet" href="/static/playground/bundle.css" type="text/css">
+  <link rel="stylesheet" href="bundle.css" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500|Material+Icons" rel="stylesheet" type="text/css">
-  <script src="/static/playground/lib.js"></script>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" type="text/css">
-  <script   src="https://code.jquery.com/jquery-3.4.1.min.js"   integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="   crossorigin="anonymous"></script>
+  <script src="lib.js"></script>
 </head>
 <body>
   <!-- GitHub link -->
@@ -54,8 +52,13 @@ limitations under the License.
   <!-- <header>
     <h1 class="l--page">Tinker With a <b>Neural Network</b> <span class="optional">Right Here </span>in Your Browser.<br>Don’t Worry, You Can’t Break It. We Promise.</h1>
   </header> -->
-  <a href="/neusualhome/test" class="btn btn-success">save</a>
+
   <!-- Top Controls -->
+{% if(!currentUser)%}
+<p>No current user</p>
+{% else %}
+<p>Has current user</p>
+{% endif %}
   <div id="top-controls">
     <div class="container l--page">
       <div class="timeline-controls">
@@ -396,8 +399,8 @@ limitations under the License.
       </div>
     </div>
   </footer> -->
-  <script src="/static/playground/bundle.js"></script>
+  <script src="bundle.js"></script>
   <!-- Google analytics -->
-  <script src="/static/playground/analytics.js"></script>
+  <script src="analytics.js"></script>
 </body>
 </html>
