@@ -12,15 +12,15 @@
         <div class="col-md-9">
             <div class="thumbnail">
                 <img class="img-responsive" src="<%= neusualnetwork.image %>">
-                <div class="caption-full">
-                    <h4 class="pull-right">$<%= neusualnetwork.price %>/night</h4>
-                </div>
                 <h3>
                     <a><%= neusualnetwork.name %></a>
                 </h3>
                 <p>
                     <%= neusualnetwork.description %>
                 </p>
+                <div style="word-wrap: break-word;">
+                    <%= neusualnetwork.nodes %>
+                </div>
                 <p>
                    <em> Submitted By <%= neusualnetwork.author.username %> </em>  
                 </p>
@@ -29,7 +29,7 @@
                     <form id="delete-form" action="/neusualhome/<%= neusualnetwork._id %>?_method=DELETE" method="POST">
                         <button class="btn btn-danger">Delete</button>
                     </form>
-                    <a class="btn btn-success" href="/neusualhome/<%= neusualnetwork._id %>/playground">To Playground</a>
+                    <a class="btn btn-success" target="_blank" href="/neusualhome/<%= neusualnetwork._id %>/playground">To Playground</a>
                 <% } %>
             </div>
             <div class="well">

@@ -131,7 +131,10 @@ class Player {
   pause() {
     this.timerIndex++;
     this.isPlaying = false;
-    (window as any).weights = getOutputWeights((window as any).network);
+    // (window as any).weights = getOutputWeights((window as any).network);
+    // (window as any).bias = getOutputBias((window as any).network);
+    // (window as any).outputs = getOutputs((window as any).network);
+    (window as any).nodes = getNodeProperty((window as any).network);
     if (this.callback) {
       this.callback(this.isPlaying);
     }
@@ -931,8 +934,7 @@ function oneStep(): void {
   lossTest = getLoss(network, testData);
   updateUI();
 }
-
-export function getOutputWeights(network: nn.Node[][]): number[] {
+export function getLinkProperty(network: nn.Node[][]) {
   let weights: number[] = [];
   for (let layerIdx = 0; layerIdx < network.length - 1; layerIdx++) {
     let currentLayer = network[layerIdx];
@@ -944,7 +946,43 @@ export function getOutputWeights(network: nn.Node[][]): number[] {
       }
     }
   }
-  return weights;
+  return {weights: weights};
+}
+export function getNodeProperty(network: nn.Node[][]) {
+  // let weights: number[] = getOutputWeights(network);
+  let bias: number[] = [];
+  for (let layerIdx = 0; layerIdx < network.length; layerIdx++) {
+    let currentLayer = network[layerIdx];
+    for (let i = 0; i < currentLayer.length; i++) {
+      bias.push(currentLayer[i].bias);
+    }
+  }
+  return {...getLinkProperty(network), bias: bias, seed: state.seed, iter: iter};
+}
+export function applyLinkProperty(network: nn.Node[][], nodes: any) {
+  var idx = 0;
+  for (let layerIdx = 0; layerIdx < network.length - 1; layerIdx++) {
+    let currentLayer = network[layerIdx];
+    for (let i = 0; i < currentLayer.length; i++) {
+      let node = currentLayer[i];
+      for (let j = 0; j < node.outputs.length; j++) {
+        let output = node.outputs[j];
+        output.weight = nodes.weights[idx];
+        idx++;
+      }
+    }
+  }
+}
+export function applyNodeProperty(network: nn.Node[][], nodes: any) {
+  var idx  = 0;
+  for (let layerIdx = 0; layerIdx < network.length; layerIdx++) {
+    let currentLayer = network[layerIdx];
+    for (let i = 0; i < currentLayer.length; i++) {
+      currentLayer[i].bias = nodes.bias[idx];
+      idx++;
+    }
+  }
+  applyLinkProperty(network, nodes);
 }
 
 function reset(onStartup=false) {
@@ -965,13 +1003,22 @@ function reset(onStartup=false) {
   let shape = [numInputs].concat(state.networkShape).concat([1]);
   let outputActivation = (state.problem === Problem.REGRESSION) ?
       nn.Activations.LINEAR : nn.Activations.TANH;
-  network = nn.buildNetwork(shape, state.activation, outputActivation,
-      state.regularization, constructInputIds(), state.initZero);
+  
+  // else
+    network = nn.buildNetwork(shape, state.activation, outputActivation,
+     state.regularization, constructInputIds(), state.initZero);
+  if ((window as any)._nodes != null && Object.keys((window as any)._nodes).length > 0) {
+    applyNodeProperty(network, (window as any)._nodes);
+    iter = (window as any)._nodes.iter;
+  }
+    // network = nn.buildNetwork(shape, state.activation, outputActivation,
+    //     state.regularization, constructInputIds(), state.initZero);
   (window as any).network = network;
   lossTrain = getLoss(network, trainData);
   lossTest = getLoss(network, testData);
   drawNetwork(network);
   updateUI(true);
+
 };
 
 function initTutorial() {
@@ -1076,7 +1123,11 @@ function hideControls() {
 }
 
 function generateData(firstTime = false) {
-  if (!firstTime) {
+  if ((window as any)._nodes != null && Object.keys((window as any)._nodes).length > 0) {
+    state.seed = (window as any)._nodes.seed;
+    state.serialize();
+  }
+  else if (!firstTime) {
     // Change the seed.
     state.seed = Math.random().toFixed(5);
     state.serialize();

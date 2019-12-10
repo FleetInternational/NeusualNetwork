@@ -26,7 +26,6 @@ app.set("view engine","ejs");
 app.set('views', './views');
 app.use("/static", express.static(__dirname + "/public"));
 app.use(methodOverride("_method"));
-
 // app.use("/playground", express.static("./playground/dist"));
 
 app.use(require("express-session")({

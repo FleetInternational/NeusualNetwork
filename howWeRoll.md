@@ -12,10 +12,10 @@ This is how we roll
 - Put playground into Neusual folder
 - Prototyping using Goorm.io
 - We used passport.js for Auth
-
+- Turn playground into `ejs`
+- Save training data to `mongodb`
+- Use nginx for reverse proxy
 
 ### Work in progress
-- Turn playground into `ejs`
 - Put it on AWS `EC2`
-- Save training data to `mongodb`
 
