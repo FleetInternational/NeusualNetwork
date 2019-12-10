@@ -10224,6 +10224,14 @@ exports.getOutputNode = getOutputNode;
 
 },{}],6:[function(require,module,exports){
 "use strict";
+var __assign = (this && this.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
 exports.__esModule = true;
 var nn = require("./nn");
 var heatmap_1 = require("./heatmap");
@@ -10318,7 +10326,7 @@ var Player = (function () {
     Player.prototype.pause = function () {
         this.timerIndex++;
         this.isPlaying = false;
-        window.weights = getOutputWeights(window.network);
+        window.nodes = getNodeProperty(window.network);
         if (this.callback) {
             this.callback(this.isPlaying);
         }
@@ -10987,7 +10995,7 @@ function oneStep() {
     lossTest = getLoss(network, testData);
     updateUI();
 }
-function getOutputWeights(network) {
+function getLinkProperty(network) {
     var weights = [];
     for (var layerIdx = 0; layerIdx < network.length - 1; layerIdx++) {
         var currentLayer = network[layerIdx];
@@ -10999,9 +11007,47 @@ function getOutputWeights(network) {
             }
         }
     }
-    return weights;
+    return { weights: weights };
 }
-exports.getOutputWeights = getOutputWeights;
+exports.getLinkProperty = getLinkProperty;
+function getNodeProperty(network) {
+    var bias = [];
+    for (var layerIdx = 0; layerIdx < network.length; layerIdx++) {
+        var currentLayer = network[layerIdx];
+        for (var i = 0; i < currentLayer.length; i++) {
+            bias.push(currentLayer[i].bias);
+        }
+    }
+    return __assign({}, getLinkProperty(network), { bias: bias, seed: state.seed, iter: iter });
+}
+exports.getNodeProperty = getNodeProperty;
+function applyLinkProperty(network, nodes) {
+    var idx = 0;
+    for (var layerIdx = 0; layerIdx < network.length - 1; layerIdx++) {
+        var currentLayer = network[layerIdx];
+        for (var i = 0; i < currentLayer.length; i++) {
+            var node = currentLayer[i];
+            for (var j = 0; j < node.outputs.length; j++) {
+                var output = node.outputs[j];
+                output.weight = nodes.weights[idx];
+                idx++;
+            }
+        }
+    }
+}
+exports.applyLinkProperty = applyLinkProperty;
+function applyNodeProperty(network, nodes) {
+    var idx = 0;
+    for (var layerIdx = 0; layerIdx < network.length; layerIdx++) {
+        var currentLayer = network[layerIdx];
+        for (var i = 0; i < currentLayer.length; i++) {
+            currentLayer[i].bias = nodes.bias[idx];
+            idx++;
+        }
+    }
+    applyLinkProperty(network, nodes);
+}
+exports.applyNodeProperty = applyNodeProperty;
 function reset(onStartup) {
     if (onStartup === void 0) { onStartup = false; }
     lineChart.reset();
@@ -11019,6 +11065,10 @@ function reset(onStartup) {
     var outputActivation = (state.problem === state_1.Problem.REGRESSION) ?
         nn.Activations.LINEAR : nn.Activations.TANH;
     network = nn.buildNetwork(shape, state.activation, outputActivation, state.regularization, constructInputIds(), state.initZero);
+    if (window._nodes != null && Object.keys(window._nodes).length > 0) {
+        applyNodeProperty(network, window._nodes);
+        iter = window._nodes.iter;
+    }
     window.network = network;
     lossTrain = getLoss(network, trainData);
     lossTest = getLoss(network, testData);
@@ -11117,7 +11167,11 @@ function hideControls() {
 }
 function generateData(firstTime) {
     if (firstTime === void 0) { firstTime = false; }
-    if (!firstTime) {
+    if (window._nodes != null && Object.keys(window._nodes).length > 0) {
+        state.seed = window._nodes.seed;
+        state.serialize();
+    }
+    else if (!firstTime) {
         state.seed = Math.random().toFixed(5);
         state.serialize();
         userHasInteracted();

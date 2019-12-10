@@ -19,7 +19,14 @@ var neusualnetworkSchema = new mongoose.Schema({
             ref:"Comment"
         }
     ],
-    weights: String,
+    nodes: String,
+    // nodes contains these properties:
+    // weights: String,
+    // bias: String,
+    // outputs: String,
+    // inputDer: String,
+    // outputDer: String,
+    // totalInputs: String,
 }); 
 
 var Neusualnetwork = mongoose.model("Neusualnetwork", neusualnetworkSchema);

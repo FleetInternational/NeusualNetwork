@@ -14,15 +14,14 @@ router.get("/", function(req,res){
 //CREATE ADD NEW CAMPGROUND
 router.post("/",middleware.isLoggedIn, function(req,res){
    var newneunet = req.body.addnew;
-   var price = req.body.price;
    var image = req.body.image;
    var description = req.body.description;
    var author = {
        id:req.user._id,
        username:req.user.username
    };
-   var weights = req.body.weights;
-   var newNeusualnetwork = {name:newneunet , price:price, image:image, description:description, author:author, weights: weights};
+   var nodes = req.body.nodes;
+   var newNeusualnetwork = {name:newneunet , image:image, description:description, author:author, nodes: nodes};
    //create new neusualnetwork and save to DB
    Neusualnetwork.create(newNeusualnetwork, function(err,newlyCreated){
        if(err){
@@ -84,6 +83,8 @@ router.put("/:id/playground",middleware.checkNeusualnetworkOwnership_ajax, funct
             res.status(500).send();
         }else{
             // res.redirect("/neusualhome/" + req.params.id); // instead of req.params.id , can also be done updatedNeusualnetwork._id 
+            console.log(req.body.neusualnetwork);
+            console.log(updatedNeusualnetwork);
             res.status(200).send(req.body.neusualnetwork);
         }   
     });
