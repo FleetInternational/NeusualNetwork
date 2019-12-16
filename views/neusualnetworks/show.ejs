@@ -19,7 +19,18 @@
                     <%= neusualnetwork.description %>
                 </p>
                 <div style="word-wrap: break-word;">
-                    <%= neusualnetwork.nodes %>
+                    Model data: <button onclick="(() => {
+                        var n = document.getElementById('nodes');
+                        if (n.style.display == 'none') {
+                            n.style.display = 'block';
+                            this.innerHTML = 'Click to hide';
+                        }
+                        else {
+                            n.style.display = 'none';
+                            this.innerHTML = 'Click to show';
+                        }
+                    })()" class="btn btn-info">Click to show</button>
+                    <pre id="nodes" style="display: none;"><%= neusualnetwork.nodes %></pre>
                 </div>
                 <p>
                    <em> Submitted By <%= neusualnetwork.author.username %> </em>  

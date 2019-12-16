@@ -65,7 +65,7 @@ router.get("/:id/edit", middleware.checkNeusualnetworkOwnership, function(req, r
     //if not redirect
 });
 
-router.get("/:id/playground", middleware.checkNeusualnetworkOwnership, function(req, res) { // middleware is called before we go to route handler
+router.get("/:id/playground", function(req, res) { // middleware is called before we go to route handler
     Neusualnetwork.findById(req.params.id, function(err,foundNeusualnetwork){
         if (err){
             console.log(err);
