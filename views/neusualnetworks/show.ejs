@@ -3,10 +3,11 @@
     <div class="row">
         <div class="col-md-3">
             <p class="lead">NEUSUAL</p>
+            <%var nodes = JSON.parse(neusualnetwork.nodes);%>
             <div class="list-group">
-                <li class="list-group-item active">Item 1</li>
-                <li class="list-group-item">Item 2</li>
-                <li class="list-group-item">Item 3</li>
+                <li class="list-group-item">Epoch: <%= nodes.iter %></li>
+                <li class="list-group-item">Seed: <%= nodes.seed %></li>
+                <li class="list-group-item">Fully Connected</li>
             </div>
         </div>
         <div class="col-md-9">
@@ -19,7 +20,7 @@
                     <%= neusualnetwork.description %>
                 </p>
                 <div style="word-wrap: break-word;">
-                    Model data: <button onclick="(() => {
+                    Raw model data: <button onclick="(() => {
                         var n = document.getElementById('nodes');
                         if (n.style.display == 'none') {
                             n.style.display = 'block';
@@ -40,8 +41,8 @@
                     <form id="delete-form" action="/neusualhome/<%= neusualnetwork._id %>?_method=DELETE" method="POST">
                         <button class="btn btn-danger">Delete</button>
                     </form>
-                    <a class="btn btn-success" target="_blank" href="/neusualhome/<%= neusualnetwork._id %>/playground">To Playground</a>
                 <% } %>
+                <a class="btn btn-success" target="_blank" href="/neusualhome/<%= neusualnetwork._id %>/playground">To Playground</a>
             </div>
             <div class="well">
                 <div class="text-right">

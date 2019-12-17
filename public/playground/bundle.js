@@ -11074,6 +11074,7 @@ function reset(onStartup) {
     lossTest = getLoss(network, testData);
     drawNetwork(network);
     updateUI(true);
+    window.nodes = getNodeProperty(window.network);
 }
 ;
 function initTutorial() {

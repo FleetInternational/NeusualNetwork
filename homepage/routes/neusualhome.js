@@ -28,7 +28,9 @@ router.post("/",middleware.isLoggedIn, function(req,res){
            console.log(err);
        }else{
            console.log(newlyCreated);
-           res.redirect("/neusualhome");
+        //    res.redirect("/neusualhome");
+            // res.redirect(`/neusualhome/${author.id}/playground`);
+            res.render("playground/index",{ neusualnetwork: newlyCreated}); 
        }
    });
 });

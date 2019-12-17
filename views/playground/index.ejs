@@ -75,10 +75,7 @@ limitations under the License.
       </div>
     <% }%>
     </div>
-    <form id="nodes" action="/neusualhome/<%= neusualnetwork._id %>/playground?_method=PUT" method="POST" onsubmit="return submit_nodes()">
-      <input type="hidden" id="node_value" name="neusualnetwork[nodes]" value="<%= neusualnetwork.nodes %>">
-      <input type="submit" class="btn btn-success" value="Save session">
-    </form>
+
   <!-- Top Controls -->
   <div id="top-controls">
     <div class="container l--page">
@@ -331,6 +328,12 @@ limitations under the License.
             <span class="mdl-checkbox__label label">Discretize output</span>
           </label>
         </div>
+        <br/><br/>
+        <form style="display: inline" id="nodes" action="/neusualhome/<%= neusualnetwork._id %>/playground?_method=PUT" method="POST" onsubmit="return submit_nodes()">
+          <input type="hidden" id="node_value" name="neusualnetwork[nodes]" value="<%= neusualnetwork.nodes %>">
+          <input type="submit" class="btn btn-success" value="Save session">
+        </form>
+        <a class="btn btn-info" href="/neusualhome/<%= neusualnetwork._id%>">Go back</a>
       </div>
     </div>
 
